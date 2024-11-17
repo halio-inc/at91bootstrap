@@ -82,4 +82,6 @@ extern void at91_disable_smd_clock(void);
 
 extern int at91_board_act8865_set_reg_voltage(void);
 
+extern void hw_post_init(void);
+
 #endif /* #ifndef __BOARD_H__ */

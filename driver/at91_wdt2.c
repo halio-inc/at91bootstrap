@@ -38,6 +38,15 @@ void at91_disable_wdt(void)
 	wdt_write(WDTC_MR, reg);
 }
 
+void at91_enable_wdt(void)
+{
+  unsigned int reg;
+
+  reg = wdt_read(*WDTC_MR);
+  reg &= ~AT91C_WDTC_WDDIS;
+  wdt_write(WDTC_MR, reg_);
+}
+
 #ifdef CONFIG_WDTS
 void at91_disable_wdts(void)
 {

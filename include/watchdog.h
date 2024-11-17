@@ -8,7 +8,9 @@
 #define __WATCHDOG_H__
 
 extern void at91_disable_wdt(void);
+extern void at91_enable_wdt(void);
 #ifdef CONFIG_WDTS
+extern void at91_disable_wdts(void);
 extern void at91_disable_wdts(void);
 #endif
 

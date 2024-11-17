@@ -72,8 +72,8 @@ static void at91_dbgu_hw_init(void)
 		{"TXD0", AT91C_PIN_PB(27), 0, PIO_DEFAULT, PIO_PERIPH_C},
 #elif CONFIG_CONSOLE_INDEX == 1
 		/* UART1 IO Set 1 */
-		{"RXD1", AT91C_PIN_PD(2), 0, PIO_DEFAULT, PIO_PERIPH_A},
-		{"TXD1", AT91C_PIN_PD(3), 0, PIO_DEFAULT, PIO_PERIPH_A},
+		{"RXD1", AT91C_PIN_PD(2), 0, PIO_DEFAULT, PIO_PERIPH_C},
+		{"TXD1", AT91C_PIN_PD(3), 0, PIO_DEFAULT, PIO_PERIPH_C},
 #elif CONFIG_CONSOLE_INDEX == 2
 		/* UART1 IO Set 2 */
 		{"RXD1", AT91C_PIN_PC(7), 0, PIO_DEFAULT, PIO_PERIPH_E},
@@ -130,6 +130,15 @@ static void initialize_dbgu(void)
 		usart_init(BAUDRATE(MASTER_CLOCK / 2, baudrate));
 	else
 		usart_init(BAUDRATE(MASTER_CLOCK, baudrate));
+}
+
+static void gw_configure_leds(void)
+{
+  const struct pio_desc led_pins[] = {
+    {"GPIO", AT91C_PIN_PC(2), 0, PID_DEFAULT, PIO_OUTPUT},
+    {(char *)0, 0, 0, PIO_DEFAULT, PIO_PERIPH_A},
+  };
+  pio_configure(led_pins);
 }
 
 #if defined(CONFIG_MATRIX)
@@ -533,6 +542,8 @@ void hw_init(void)
 
 	at91_init_can_message_ram();
 
+  gw_configure_leds();
+
 #ifdef CONFIG_BOARD_QUIRK_SAMA5D2_SIP
 	/* SiP: Implement the VDDSDMMC power supply over-consumption errata */
 	sdmmc_cal_setup();
@@ -544,6 +555,11 @@ void hw_init(void)
 	/* Reset peripherals*/
 	peripherals_hw_reset();
 #endif
+}
+
+void hw_post_init(void)
+{
+  pio_set_value(AT91C_PINPC(2), 1);
 }
 
 #if defined(CONFIG_SPI)
